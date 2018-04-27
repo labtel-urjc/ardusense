@@ -1,0 +1,99 @@
+Partlist
+
+Exported from ArduSense_V0_3_5.brd at 13/02/2017 13:05:37
+
+EAGLE Version 7.2.0 Copyright (c) 1988-2014 CadSoft
+
+Assembly variant: 
+
+Part                 Value          Package              Library     Position (mm)         Orientation
+
+AT3V3                DNP            TP_3535              CEI_Bio_Tic (48.006 38.1)         MR0
+BAT_RTC              DNP            TP_3535              CEI_Bio_Tic (74.041 28.194)       R90
+BAT_RTC1                            SJ                   jumper      (71.56 32.02)         R90
+BAT_RTC2                            SJ                   jumper      (71.56 28.46)         R90
+BEE                  XBee Socket    BEE                  CEI_Bio_Tic (12.319 35.56)        R90
+BEE_RESET            PUSH_BUTTON    PBUTTON_SMD          CEI_Bio_Tic (5.908 55.698)        R180
+C1                   100nF          C1206                CEI_Bio_Tic (89.154 24.13)        R180
+C2                   100nF          C1206                CEI_Bio_Tic (34.5186 38.5064)     R90
+C3                   10v_10uF       AVX-A                CEI_Bio_Tic (49.28 38.12)         R0
+C5                   22pF           C1206                CEI_Bio_Tic (27.559 15.9004)      R270
+C6                   22pF           C1206                CEI_Bio_Tic (54.991 41.275)       R0
+C7                   22pF           C1206                CEI_Bio_Tic (49.403 41.275)       R180
+C8                   100nF          C1206                CEI_Bio_Tic (85.725 53.975)       R90
+C9                   10v_10uF       AVX-A                CEI_Bio_Tic (33.401 3.937)        R90
+C10                  DNP            C1206                CEI_Bio_Tic (83.312 53.975)       R90
+C11                  100nF          C1206                CEI_Bio_Tic (37.8206 15.9004)     R270
+C12                  1uF            C0805                CEI_Bio_Tic (56.8274 20.0916)     R270
+C13                  10v_10uF       AVX-A                CEI_Bio_Tic (42.291 14.351)       R0
+C14                  1F_5V          EB21,5D              CEI_Bio_Tic (65.907 35.967)       MR180
+C15                  10v_10uF       AVX-A                CEI_Bio_Tic (15.621 32.893)       R90
+C16                  10v_10uF       AVX-A                CEI_Bio_Tic (22.733 32.893)       R90
+C18                  10v_10uF       AVX-A                CEI_Bio_Tic (39.116 10.922)       R90
+C19                  100nF          C1206                CEI_Bio_Tic (19.705 39.078)       R0
+C20                  10v_1uF        C0805                CEI_Bio_Tic (18.923 11.1887)      R0
+C21                  10v_10uF       AVX-A                CEI_Bio_Tic (48.2 16.12)          R90
+CH                   Red            D1206                CEI_Bio_Tic (15.2414 13.9098)     R0
+CH_STATUS                           SJ                   jumper      (11.22 9.76)          R270
+D1                   DFLS120L-7     POWERDI123           CEI_Bio_Tic (13.2122 4.8254)      R270
+D2                   DFLS120L-7     POWERDI123           CEI_Bio_Tic (40.64 1.778)         SR180
+D3                   DFLS120L-7     POWERDI123           CEI_Bio_Tic (40.64 6.858)         R0
+D4                   DFLS120L-7     POWERDI123           CEI_Bio_Tic (39.37 4.191)         R0
+D5                   DFLS120L-7     POWERDI123           CEI_Bio_Tic (78.0288 25.5112)     R180
+D6                   DFLS120L-7     POWERDI123           CEI_Bio_Tic (89.7828 21.6154)     R180
+D7                   DFLS120L-7     POWERDI123           CEI_Bio_Tic (72.898 25.562)       R180
+I2C                  2.0-4p-Grove   4P-2.0               CEI_Bio_Tic (70.8152 18.034)      R270
+ICSP                 2.54 male 2x3p 2X3P-2.54-LEADED     CEI_Bio_Tic (77.624 31.82)        R0
+J6                   DNP            HEADER_1X10          CEI_Bio_Tic (17.399 21.59)        R90
+J8                   DNP            HEADER_1X10          CEI_Bio_Tic (17.399 49.53)        R270
+LED_13                              SJ                   jumper      (38.82 58.74)         R180
+LIPO_BAT             2.0-JST        JST-2.0              CEI_Bio_Tic (18.804 6.5956)       R180
+OK                   Green          D1206                CEI_Bio_Tic (15.2414 16.2814)     R0
+PB                   2.54 female 8p 8P-2.54-LEADED       CEI_Bio_Tic (45.466 54.61)        R270
+PB5                  Green          D1206                CEI_Bio_Tic (28.62 58.794)        R180
+PC                   2.54 female 6p 6P-2.54-LEADED       CEI_Bio_Tic (69.85 6.35)          R90
+PD                   2.54 female 8p 8P-2.54-LEADED       CEI_Bio_Tic (67.31 54.61)         R270
+POWER_BEE                           SJ                   jumper      (24.98 36.3)          R0
+POWER_SD                            SJ                   jumper      (54.78 10.78)         R0
+PWR                  2.54 female 6p 6P-2.54-LEADED       CEI_Bio_Tic (52.07 6.35)          R270
+Q3                   si2305CDS      SOT23                CEI_Bio_Tic (35.052 10.668)       R0
+R1                   196            R1206                CEI_Bio_Tic (76.2 21.082)         R180
+R2                   47k            R1206                CEI_Bio_Tic (18.923 36.322)       R0
+R3                   47k            R1206                CEI_Bio_Tic (45.6184 11.4554)     R90
+R4                   196            R1206                CEI_Bio_Tic (61.2962 62.1284)     R90
+R5                   4.7k           R1206                CEI_Bio_Tic (27.964 2.675)        R180
+R6                   2k             R1206                CEI_Bio_Tic (10.924 14.9412)      R270
+R7                   10k            R1206                CEI_Bio_Tic (34.798 7.366)        R0
+R8                   196            R1206                CEI_Bio_Tic (52.832 59.563)       R180
+R9                   196            R1206                CEI_Bio_Tic (76.2 16.51)          R180
+R10                  2k             R1206                CEI_Bio_Tic (33.707 58.754)       R180
+R11                  10k            R1206                CEI_Bio_Tic (89.1794 18.923)      R180
+R12                  10M_1%         R1206                CEI_Bio_Tic (32.639 15.875)       R90
+R13                  2M_1%          R1206                CEI_Bio_Tic (35.2425 15.875)      R270
+R14                  10M_1%         R1206                CEI_Bio_Tic (29.845 15.875)       R90
+R15                  4.7k           R1206                CEI_Bio_Tic (18.669 29.21)        R180
+R16                  4.7k           R1206                CEI_Bio_Tic (19.685 27.051)       R180
+R17                  2k             R1206                CEI_Bio_Tic (3.81 14.859)         R90
+R18                  2M_1%          R1206                CEI_Bio_Tic (22.479 15.875)       R270
+R19                  1M_1%          R1206                CEI_Bio_Tic (25.019 15.875)       R270
+R22                  330            R1206                CEI_Bio_Tic (88.991 26.933)       R0
+R23                  196            R1206                CEI_Bio_Tic (80.905 3.87)         R0
+R24                  196            R1206                CEI_Bio_Tic (81.003 6.483)        R0
+RESET                PUSH_BUTTON    PBUTTON_SMD          CEI_Bio_Tic (88.344 31.253)       R0
+RH_T_SENSOR          2.0-4p-Grove   4P-2.0               CEI_Bio_Tic (51.3588 63.5254)     R180
+RSSI                 Red            D1206                CEI_Bio_Tic (6.35 14.859)         R90
+RSSI_STATUS                         SJ                   jumper      (7.84 18.42)          R0
+RST/32K              DNP            JUMPER               CEI_Bio_Tic (68.0974 26.416)      R90
+SD1                  FLIP_TF3       FLIP_TF3             CEI_Bio_Tic (88.265 43.942)       R90
+SD_3V3               DNP            TP_3535              CEI_Bio_Tic (91.44 16.51)         MR0
+SERIAL_FTDI          2.54 male 6p   6P-2.54-LEADED       CEI_Bio_Tic (83.82 17.78)         R0
+SM_T_SENSOR          2.0-4p-Grove   4P-2.0               CEI_Bio_Tic (90.203 10.556)       R90
+SOLAR                2.0-JST        JST-2.0              CEI_Bio_Tic (6.5956 9.1346)       R180
+U1                   ATMEGA328AU    ATMEGA168-20AU       CEI_Bio_Tic (41.529 37.592)       R180
+U2                   MIC5025        SOT23-5              CEI_Bio_Tic (41.656 11.303)       R0
+U3                   MIC5205        SOT23-5              CEI_Bio_Tic (18.923 32.512)       R90
+U5                   CN3083         SOP8                 CEI_Bio_Tic (29.115 7.62)         R0
+U6                   MIC5205        SOT23-5              CEI_Bio_Tic (48.768 11.557)       R0
+U7                   DS3234S        SOIC127P1032X265-20N CEI_Bio_Tic (60.071 27.686)       R90
+WIRELESS_PROGRAMMING                SJ                   jumper      (18.3 42.54)          R270
+X3                   8MHz           HC49UP               CEI_Bio_Tic (52.451 44.8945)      R0
