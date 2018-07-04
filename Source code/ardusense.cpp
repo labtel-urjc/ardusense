@@ -1,4 +1,4 @@
-﻿/*Begining of Auto generated code by Atmel studio */
+/*Begining of Auto generated code by Atmel studio */
 #include <Arduino.h>
 /*End of auto generated code by Atmel studio */
 
@@ -17,21 +17,16 @@
 
 /*
 Modificar en la libreria SHT1x las siguientes lineas
-
 En float SHT1x::readTemperatureC()
-
 // Conversion coefficients from SHT15 datasheet
 //const float D1 = -40.0;  // for 14 Bit @ 5V
 const float D1 = -39.7;  // for 14 Bit @ 3.5V
 const float D2 =   0.01; // for 14 Bit DEGC
-
 En float SHT1x::readTemperatureF()
-
 // Conversion coefficients from SHT15 datasheet
 //const float D1 = -40.0;   // for 14 Bit @ 5V
 const float D1 = -39.5;  // for 14 Bit @ 3.3V
 const float D2 =   0.018; // for 14 Bit DEGF
-
 */
 
 //Beginning of Auto generated function prototypes by Atmel Studio
@@ -48,7 +43,7 @@ void send_ack_endtx();
 void send_sincro_rtc();
 void send_time_data();
 void send_file();
-byte read_charger_status(byte Charger_status_counts);
+byte read_charger_status(int Charger_status_counts);
 void comprobar_RTC();
 //End of Auto generated function prototypes by Atmel Studio
 
@@ -56,14 +51,14 @@ void comprobar_RTC();
 
 // EndPoint_ID. Unique identifier for each mote
 
-int ENDPOINT_ID = 1;
-char SAN_Endpoint_Id[]="endp_1";
+//int ENDPOINT_ID = 1;
+//char SAN_Endpoint_Id[]="endp_1";
 
 //int ENDPOINT_ID = 2;
 //char SAN_Endpoint_Id[]="endp_4";
 
-//int ENDPOINT_ID = 3;
-//char SAN_Endpoint_Id[]="endp_5";
+int ENDPOINT_ID = 3;
+char SAN_Endpoint_Id[]="endp_5";
 
 //int ENDPOINT_ID = 4;
 //char SAN_Endpoint_Id[]="endp_3";
@@ -85,12 +80,12 @@ byte num_file=0;
 
 //------------------------------------------
 
-//Variables de control de tiempo dormido y env�o de datos
+//Variables de control de tiempo dormido y env o de datos
 
 byte send_done=0;
 unsigned long tiempo;
 unsigned long tiempo_dormido;
-byte Intervalo_toma_datos = 15; // Intervalo de tiempo en el que se despierta para tomar datos. Est� en minutos
+byte Intervalo_toma_datos = 15; // Intervalo de tiempo en el que se despierta para tomar datos. Est  en minutos
 boolean firstime = true;
 
 //------------------------------------------
@@ -186,24 +181,21 @@ void setup()
 		Serial.println("ok");
 	}
 	digitalWrite(SD_chipSelect, HIGH);
-	
-	
-	
 }
 
 //------------------------------------------
 
 void loop()
 {
-	comprobar_RTC(); // comprobamos si el reloj est� en hora o se ha reiniciado.
+	comprobar_RTC(); // comprobamos si el reloj est  en hora o se ha reiniciado.
 	
-	if ((firstime == true) && (hora_rtc == true)) // si es un primer arranque pero el reloj est� en hora, cuando reseteamos el micro por software
+	if ((firstime == true) && (hora_rtc == true)) // si es un primer arranque pero el reloj est  en hora, cuando reseteamos el micro por software
 	{
 		firstime = false;
 		gettimeRTC();
 		createlogfile();
 	}
-	if ((firstime == true) && (hora_rtc == false)) // si es un primer arranque y el reloj no est� en hora, cuando arrancamos por primera vez o nos hemos quedado sin bater�a
+	if ((firstime == true) && (hora_rtc == false)) // si es un primer arranque y el reloj no est  en hora, cuando arrancamos por primera vez o nos hemos quedado sin bater a
 	{
 		send_to_coord();
 	}
@@ -228,7 +220,7 @@ void loop()
 			t_ant=t_set;
 		}
 		
-		if (contador_ciclos == 5) // cada 5 ciclos de trabajo realiamos una lectura de direcci�n de memoria 0 haciendo que se resetee el micro para liberar memoria.
+		if (contador_ciclos == 5) // cada 5 ciclos de trabajo realiamos una lectura de direcci n de memoria 0 haciendo que se resetee el micro para liberar memoria.
 		{
 			asm("jmp 0x0000");
 		}
@@ -242,7 +234,7 @@ void loop()
 
 //------------------------------------------
 
-void send_to_coord() // funcion de control de la comunicaci�n con el coordinador y del tiempo que est� despierto si no se comunican
+void send_to_coord() // funcion de control de la comunicaci n con el coordinador y del tiempo que est  despierto si no se comunican
 {
 	unsigned long tiempo_actual;
 	digitalWrite(BEE_sleep,LOW);
@@ -256,26 +248,34 @@ void send_to_coord() // funcion de control de la comunicaci�n con el coordinad
 			{
 				xbee.getResponse().getDMRxResponse(rxResponse);
 				if (rxResponse.getData(0) == 0x10)
-				{//envia el numero de ficheros que est�n sin enviar.
+				{//envia el numero de ficheros que est n sin enviar.
 					send_av_data();
-				}else if (rxResponse.getData(0) == 0x20)
+				}
+				else if (rxResponse.getData(0) == 0x20)
 				{ //envia los datos pendientes de envio.
 					sendData();
-				} else if (rxResponse.getData(0) == 0x30)
+				} 
+				else if (rxResponse.getData(0) == 0x30)
 				{// recibe un ok del envio de datos y envia otro.
 					num_file=0;
 					memset (file_no_send,0,sizeof(file_no_send));
 					send_ack_endtx();
-				}else if (rxResponse.getData(0) == 0x40)
+				}
+				else if (rxResponse.getData(0) == 0x40)
 				{// sincroniza la hora con la del nodo coordinador.
 					send_sincro_rtc();
 				}
 				else if (rxResponse.getData(0) == 0x50)
-				{ // cambiamos la frecuencia con la que toma datos, nos la mandar�n en minutos.
+				{ // cambiamos la frecuencia con la que toma datos, nos la mandar n en minutos.
 					send_time_data();
-				}else if (rxResponse.getData(0) == 0x60)
-				{ // envia un fichero concreto que nos est�n pidiendo.
+				}
+				else if (rxResponse.getData(0) == 0x60)
+				{ // envia un fichero concreto que nos est n pidiendo.
 					send_file();
+				}
+				else if (rxResponse.getData(0) == 0x70)
+				{ // volvemos a empezar la cuenta de tiempo despierto
+					tiempo = millis();
 				}
 				else
 				{
@@ -286,7 +286,7 @@ void send_to_coord() // funcion de control de la comunicaci�n con el coordinad
 		if (firstime == false) // si es la primera vez no dormimos el equipo hasta que se sincronice con el coordinador si no es la primera vez creamos un fichero nuevo y dormimos el equipo a los 3 minutos de haberse conectado
 		{
 			tiempo_actual = millis();
-			if (tiempo_actual > (tiempo + 180000))
+			if (tiempo_actual > (tiempo + 330000))
 			{//transcurridos x segundos o minutos se apaga duerme el equipo.
 				send_done=1;
 				createlogfile(); //crea un nuevo fichero.
@@ -298,7 +298,7 @@ void send_to_coord() // funcion de control de la comunicaci�n con el coordinad
 
 //------------------------------------------
 
-void sendData() // envia el contenido de los 5 �ltimos ficheros pendientes de enviar
+void sendData() // envia el contenido de los 5  ltimos ficheros pendientes de enviar
 {
 	File myFile;
 	char caracter;
@@ -324,7 +324,7 @@ void sendData() // envia el contenido de los 5 �ltimos ficheros pendientes de 
 				{
 					caracter = myFile.read();
 					if (caracter == 10)
-					{ // c�digo ascii del salto de linea
+					{ // c digo ascii del salto de linea
 						break;
 					}
 					else
@@ -403,7 +403,7 @@ void send_file() // envia el contenido de un fichero que nos piden desde el coor
 			{
 				caracter = myFile.read();
 				if (caracter == 10)
-				{ // c�digo ascii del salto de linea
+				{ // c digo ascii del salto de linea
 					break;
 				}
 				else
@@ -499,7 +499,7 @@ void send_cmd_error() // enviamos un error por no haber podido recibir o enviar 
 
 //------------------------------------------
 
-void send_ack_endtx() //envia la confirmaci�n de haber enviado los datos correctamente
+void send_ack_endtx() //envia la confirmaci n de haber enviado los datos correctamente
 {
 	uint8_t payload_2[60]={};
 	char lon_frame[25]={};
@@ -627,7 +627,7 @@ void getTH() // toma las medidas de los sensores
 
 //------------------------------------------
 
-void gettimeRTC() // env�a la fecha que tiene el RTC al micro.
+void gettimeRTC() // env a la fecha que tiene el RTC al micro.
 {
 	SPI.setDataMode(SPI_MODE1);
 	digitalWrite(RTC_chipSelect, LOW);
@@ -658,7 +658,7 @@ void readbatlevel() // lee el nivel de bateria
 
 //------------------------------------------
 
-byte read_charger_status(byte Charger_status_counts) // comprueba el estado de la bateria en cuanto a conexi�n de carga
+byte read_charger_status(int Charger_status_counts) // comprueba el estado de la bateria en cuanto a conexi n de carga
 {
 	byte CH_Status=0;
 	if(Charger_status_counts>900)
@@ -702,3 +702,4 @@ void comprobar_RTC() //Comprobamos si es la primera vez que arrancamos el sistem
 }
 
 //------------------------------------------
+
