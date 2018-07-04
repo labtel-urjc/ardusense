@@ -419,7 +419,10 @@ def serveforever(xbee):
                     print frame['rf_data']
                 break
         elif op == 4:
-            pass
+            print ("mando 0x70")
+            print (data_available)
+            xbee.send("tx", id="\x10", frame_id="\x01", dest_addr_long="\x00\x00\x00\x00\x00\x00\xff\xff",
+                      dest_addr="\xFF\xFE", broadcast_radius="\x00", options="\x00", data="\x70")
         elif op == 5:
             print str(int(time.time()))
             #request_done = False
@@ -435,16 +438,17 @@ def serveforever(xbee):
                         #request_done = False
                         completo = False
                         #t = datetime.datetime.now()
+                        #print (time.time())
                         print str(t.hour) + ":" + str(t.minute) + ":" + str(t.second)
                         time.sleep(5)
 
-                    if ((t.minute == 00) and (t.hour == 10 ) and (completo == True)):
+                    if ((t.minute == 00) and (t.hour == 12 ) and (completo == True)):
                         completo = True
                         print "esperando un nuevo ciclo"
                         time.sleep(5)
                         print "esperando un nuevo ciclo"
 
-                    if ((t.minute == 00) and (t.hour == 10) and (completo == False)):
+                    if ((t.minute == 00) and (t.hour == 12) and (completo == False)):
                         print ("secuencia de pedida de datos")
                         destinators = getendpoints()
                         # print destinators
@@ -475,6 +479,9 @@ def serveforever(xbee):
                                 completo = True
                             print "he terminado todos los datos"
                         print "he salido del bucle for"
+                        #guardamos los datos de intensidad de la red
+                        RSSI_Coordinador(xbee)
+                        RSSI_resto_nodos(xbee)
                         print ("Sincronizamos la hora")
                         xbee.send("tx", id="\x10", frame_id="\x01", dest_addr_long="\x00\x00\x00\x00\x00\x00\xff\xff",dest_addr="\xFF\xFE", broadcast_radius="\x00", options="\x00",data="\x40" + str(time.time()))
                         print (time.time())
@@ -496,7 +503,6 @@ def serveforever(xbee):
                 else:
                     print "trama no Rx:"
                     print frame
-
         elif op == 7:
             print ("mando 0x40")
             xbee.send("tx", id="\x10", frame_id="\x01", dest_addr_long="\x00\x00\x00\x00\x00\x00\xff\xff",
@@ -573,8 +579,9 @@ def serveforever(xbee):
 
         else:
             print("opcion invalida pulse h para ayuda")
-            print ("Pulse 1 para recolectar lineas dsiponibles")
+            print ("Pulse 1 para recolectar lineas disponibles")
             print ("Pulse 2 para recolectar datos")
+            print ("Pulse 4 para mantener despierta mas tiempo")
             print ("Pulse 6 para finalizar transmision")
             print ("Pulse 7 sincronizacion")
             print ("Pulse 8 modificar frecuencia de mustreo")
@@ -582,8 +589,231 @@ def serveforever(xbee):
             print ("pulse 5 para servicio automatico de recolecta de datos")
 
         serveforever(xbee)
+    except Exception as e:
+
+        print e
+
+def RSSI_Coordinador(xbee):
+    print 'pido dato RSSI de nodo coordinador'
+    xbee.halt()
+    # xbee.send("remote_at", id="\x17", frame_id="\x01", dest_addr_long="\x00\x13\xA2\x00\x40\xB1\x35\x5D", dest_addr="\xFF\xFE", options="\x00", command="\x46\x4E")
+    xbee.send("at", frame_id="\x01", command="\x46\x4E")
+    while True:
+        try:
+            frame = xbee.wait_read_frame(timeout=10)
+            if frame['id'] == 'at_response' and frame['status'] == '\x00':
+                print str(frame)
+                try:
+                    datosframe = frame['parameter']
+                    datonodo = datosframe[10:17]
+                    print datonodo
+                    longi = len(datosframe)
+                    datodb = datosframe[longi - 1]
+                    print 'signal db: '
+                    print ord(datodb)
+                    nodo_emisor = str('nodo_co')
+                    print nodo_emisor
+                    nodo_receptor = str(datonodo)
+                    print nodo_receptor
+                    t = datetime.datetime.now()
+                    fecha = str(t.day) + "/" + str(t.month) + "/" + str(t.year)
+                    print fecha
+                    insert_RSSI(str(fecha), nodo_emisor, nodo_receptor, datodb)
+                    # consulta(longi, datodb, nodo_emisor, nodo_receptor)
+                except:
+                    break
+            else:
+                print 'no hay frame'
+        except:
+            print 'termino'
+            break
+    print 'paso al siguiente'
+    # RSSI_resto_nodos(xbee)
+
+    """
+    print ("pido dato RSSI de nodo 10")
+    xbee.halt()
+    xbee.send("remote_at", id="\x17", frame_id="\x01", dest_addr_long="\x00\x13\xA2\x00\x40\xB1\x34\xDF",
+      dest_addr="\xFF\xFE", options="\x00", command="\x46\x4E")
+    while True:
+        try:
+            frame = xbee.wait_read_frame(timeout = 15)
+            if frame['id'] == 'remote_at_response' and frame['status'] == '\x00':
+                print str(frame)
+                try:
+                    datosframe = frame['parameter']
+                    datonodo = datosframe[10:17]
+                    print datonodo
+                    longi = len(datosframe)
+                    datodb = datosframe[longi - 1]
+                    print 'signal db: '
+                    print ord(datodb)
+                    nodo_emisor = str('nodo_10')
+                    print nodo_emisor
+                    nodo_receptor = str(datonodo)
+                    print nodo_receptor
+                    t = datetime.datetime.now()
+                    fecha = str(t.day) + "/" + str(t.month) + "/" + str(t.year)
+                    print fecha
+                    consulta(str(fecha), nodo_emisor, nodo_receptor, datodb)
+                except:
+                    break
+            else:
+                print 'no hay frame'
+        except:
+            print 'termino'
+            break
+    print 'paso al siguiente'
+    print ("pido dato RSSI de nodo 2")
+    xbee.halt()
+    xbee.send("remote_at", id="\x17", frame_id="\x01", dest_addr_long="\x00\x13\xA2\x00\x40\xAD\x63\xA7",
+              dest_addr="\xFF\xFE", options="\x00", command="\x46\x4E")
+    #xbee.send("remote_at", id="\x17", frame_id="\x01", dest_addr_long="\x00\x13\xA2\x00\x40\xB1\x35\x5D", dest_addr="\xFF\xFE", options="\x00", command="\x46\x4E")
+    while True:
+        try:
+            frame = xbee.wait_read_frame(timeout = 15)
+            if frame['id'] == 'remote_at_response' and frame['status'] == '\x00':
+                print str(frame)
+                try:
+                    datosframe = frame['parameter']
+                    datonodo = datosframe[10:17]
+                    print datonodo
+                    longi = len(datosframe)
+                    datodb = datosframe[longi - 1]
+                    print 'signal db: '
+                    print ord(datodb)
+                    nodo_emisor = str('nodo_2')
+                    print nodo_emisor
+                    nodo_receptor = str(datonodo)
+                    print nodo_receptor
+                    t = datetime.datetime.now()
+                    fecha = str(t.day) + "/" + str(t.month) + "/" + str(t.year)
+                    print fecha
+                    consulta(str(fecha), nodo_emisor, nodo_receptor, datodb)
+                except:
+                    break
+            else:
+                print 'no hay frame'
+        except:
+            print 'termino'
+            break
+    print 'paso al siguiente ciclo'
+    """
+    time.sleep(5)
+    # RSSI_GLOBAL(xbee)
 
 
+def consulta_nodos(xbee):
+    try:
+        con = mdb.connect('localhost', 'root', 'root', 'ardusense')
+        with con:
+            cur = con.cursor()
+            # update ardusense.endpoints set endp_address='0013A200:408BC81E' where endp_id='endp_1'
+            # print("SELECT endp_id,endp_address FROM ardusense.endpoints;")
+            print "Recuperando datos de nodos de la red"
+            # cur.execute("SELECT nodo,endp_address FROM ardusense.endpoints where nodo='nodo_10' or nodo='nodo_02' order by id asc;")
+            cur.execute(
+                "SELECT nodo,endp_address FROM ardusense.endpoints;")
+            end_params = cur.fetchall()
+            return end_params
+    except con.Error as err:
+        if (output == 1):
+            print("Something went wrong, working with  database: {}".format(err))
+        return end_params
+        serial_port.close()
+        sys.exit(0)
+    # time.sleep(10)  # esperamos 1:30 minutos y asi nos aseguramos que los nodos se han despertado
+
+
+def RSSI_resto_nodos(xbee):
+    destinators = consulta_nodos(xbee)
+    for destinator in destinators:
+        address = destinator[1].split(':')[0]
+        address += destinator[1].split(':')[1]
+        time.sleep(0.5)
+        # address="0013A20040B134DF"
+        # address = "0013A20040AD63A7"
+        xbee.halt()
+        xbee.send("remote_at", id="\x17", frame_id="\x01", dest_addr_long=address.decode('hex'),
+                  dest_addr="\xFF\xFE", options="\x00", command="\x46\x4E")
+        print ("pido dato RSSI desde: " + destinator[0])
+        print ("direccion: " + address)
+        while True:
+            try:
+                frame = xbee.wait_read_frame(timeout=10)
+                if frame['id'] == 'remote_at_response' and frame['status'] == '\x00':
+                    print str(frame)
+                    try:
+                        datosframe = frame['parameter']
+                        datonodo = datosframe[10:17]
+                        print datonodo
+                        longi = len(datosframe)
+                        datodb = datosframe[longi - 1]
+                        print 'signal db: '
+                        print ord(datodb)
+                        nodo_emisor = str(destinator[0])
+                        print nodo_emisor
+                        nodo_receptor = str(datonodo)
+                        print nodo_receptor
+                        t = datetime.datetime.now()
+                        fecha = str(t.day) + "/" + str(t.month) + "/" + str(t.year)
+                        print fecha
+                        insert_RSSI(str(fecha), nodo_emisor, nodo_receptor, datodb)
+                    except:
+                        break
+                else:
+                    print frame
+                    print 'no hay frame'
+            except:
+                print 'termino'
+                break
+        print 'paso al siguiente'
+        """
+        if discovered:
+            # xbee = ZigBee(serial_port, escaped=True)
+            rq_data(address, destinator[0], xbee)
+            end_tx(address, destinator[0], xbee)
+            # request_done = False
+            completo = True
+            print "esperamos a un nuevo ciclo"
+        else:
+            print "datos ya pedidos esperamo al siguiente ciclo"
+            t = datetime.datetime.now()
+            print str(t.hour) + ":" + str(t.minute) + ":" + str(t.second)
+            time.sleep(0.5)
+            # request_done = False
+            completo = True
+        """
+        print "he terminado todos los datos"
+    print "he salido del bucle for"
+
+
+def insert_RSSI(var1, var2, var3, var4):
+    try:
+        con = mdb.connect('localhost', 'root', 'root', 'ardusense')
+        with con:
+            cur = con.cursor()
+            # update ardusense.endpoints set endp_address='0013A200:408BC81E' where endp_id='endp_1'
+            # print("SELECT endp_id,endp_address FROM ardusense.endpoints;")
+            print "guardando datos"
+            # cursor.execute("INSERT INTO ardusense.antenas (fecha, emisor, receptor, intensidad) VALUES (?, ?, ?, ?);",'cassete' ,'moto' ,'rosa', 'malva')
+            # cur.execute("INSERT INTO `ardusense`.`antenas` (`fecha`, `emisor`, `receptor`, `intensidad`) VALUES (?, ?, ?, ?);"),'LIBRO', 'CASCO', 'naranja', 'morado')
+            cur.execute("INSERT INTO `ardusense`.`antenas` (`fecha`, `emisor`, `receptor`, `intensidad`) "
+                        "VALUES ( '" + str(var1) + "', '" + str(var2) + "', '" + str(var3) + "', '" + str(
+                ord(var4)) + "' );")
+            # cur.execute("INSERT INTO `ardusense`.`antenas` (`fecha`, `emisor`, `receptor`, `intensidad`) VALUES ('LIBRO', 'CASCO', 'naranja', 'morado');")
+            # cur.execute("SELECT * FROM ardusense.antenas order by id asc;")
+            # cur.execute("SELECT endp_id,endp_address FROM ardusense.endpoints order by id asc;")
+            # endp_params = cur.fetchall()
+            # print endp_params
+            # return endp_params
+            print "datos guardados"
+    except con.Error as err:
+        if (output == 1):
+            print("Something went wrong, working with  database: {}".format(err))
+        return endp_params
+        serial_port.close()
+        sys.exit(0)
     except Exception as e:
 
         print e
