@@ -22,7 +22,6 @@ def setstatus(endp_id, status):
         con = mdb.connect('localhost', 'root', 'root','ardusense')
         with con:
             cur = con.cursor()
-            # update ardusense.endpoints set endp_address='0013A200:408BC81E' where endp_id='endp_1'
             print("update ardusense.endpoints set state =" + str(status) + " where endp_id='" + endp_id + "'")
             cur.execute("update ardusense.endpoints set state =" + str(status) + " where endp_id='" + endp_id + "'")
 
@@ -39,12 +38,9 @@ def getendpoints():
         con = mdb.connect('localhost', 'root', 'root', 'ardusense')
         with con:
             cur = con.cursor()
-            # update ardusense.endpoints set endp_address='0013A200:408BC81E' where endp_id='endp_1'
-            #print("SELECT endp_id,endp_address FROM ardusense.endpoints;")
             print "Recuperando datos de nodos de la red"
             cur.execute("SELECT endp_id,endp_address FROM ardusense.endpoints order by id asc;")
             endp_params = cur.fetchall()
-            #print endp_params
             return endp_params
     except con.Error as err:
 
@@ -62,11 +58,10 @@ def getrequesttime():
     endp_params = {}
 
     try:
-        #onnect to Data Base MySQL#######Connect to Data Base MySQL
+        #Connect to Data Base MySQL#######Connect to Data Base MySQL
         con = mdb.connect('localhost', 'root', 'root', 'ardusense')
         with con:
             cur = con.cursor()
-            # update ardusense.endpoints set endp_address='0013A200:408BC81E' where endp_id='endp_1'
             print("SELECT request_time FROM ardusense.managers;")
             cur.execute("SELECT request_time FROM ardusense.managers;")
             endp_params = cur.fetchone()
@@ -94,42 +89,22 @@ def saveinDB(params):
 
             cur = con.cursor()
             if (output == 1):
-                """
-                print(
-                "INSERT INTO ardusense.data (stime,loctime,endp_id,value,units,offset,datatype,samplfreq,channel_id) VALUES('" + str(
-                    aux_t) + "','" + str(datetime.datetime.now()) + "','" + params['source'] + "'," + str(
-                    params['Temp1']) + ",'C',0,'temperatura','0.001','temp_1')")
-                """
+
                 cur.execute(
                     "INSERT INTO ardusense.data (stime,loctime,endp_id,value,units,offset,datatype,samplfreq,channel_id) VALUES('" + str(
                         aux_t) + "','" + str(datetime.datetime.now()) + "','" + params['source'] + "'," + str(
                         params['Temp1']) + ",'C',0,'temperatura','0.001','temp_1')")
-                """
-                print(
-                "INSERT INTO ardusense.data (stime,loctime,endp_id,value,units,offset,datatype,samplfreq,channel_id) VALUES('" + str(
-                    aux_t) + "','" + str(datetime.datetime.now()) + "','" + params['source'] + "'," + str(
-                    params['Temp2']) + ",'C',0,'temperatura','0.001','temp_2')")
-                """
+
                 cur.execute(
                     "INSERT INTO ardusense.data (stime,loctime,endp_id,value,units,offset,datatype,samplfreq,channel_id) VALUES('" + str(
                         aux_t) + "','" + str(datetime.datetime.now()) + "','" + params['source'] + "'," + str(
                         params['Temp2']) + ",'C',0,'temperatura','0.001','temp_2')")
-                """
-                print(
-                "INSERT INTO ardusense.data (stime,loctime,endp_id,value,units,offset,datatype,samplfreq,channel_id) VALUES('" + str(
-                    aux_t) + "','" + str(datetime.datetime.now()) + "','" + params['source'] + "'," + str(
-                    params['Hum1']) + ",'%',0,'humedad','0.001','hum_1')")
-                """
+
                 cur.execute(
                     "INSERT INTO ardusense.data (stime,loctime,endp_id,value,units,offset,datatype,samplfreq,channel_id) VALUES('" + str(
                         aux_t) + "','" + str(datetime.datetime.now()) + "','" + params['source'] + "'," + str(
                         params['Hum1']) + ",'%',0,'humedad','0.001','hum_1')")
-                """"
-                print(
-                "INSERT INTO ardusense.data (stime,loctime,endp_id,value,units,offset,datatype,samplfreq,channel_id) VALUES('" + str(
-                    aux_t) + "','" + str(datetime.datetime.now()) + "','" + params['source'] + "'," + str(
-                    params['Hum2']) + ",'%',0,'humedad','0.001','hum_2')")
-                """
+
                 cur.execute(
                     "INSERT INTO ardusense.data (stime,loctime,endp_id,value,units,offset,datatype,samplfreq,channel_id) VALUES('" + str(
                         aux_t) + "','" + str(datetime.datetime.now()) + "','" + params['source'] + "'," + str(
@@ -159,11 +134,7 @@ def handledata(frame, nframe, type, source_endp):
     # data_available=nframe
     params = {}
     try:
-        """
-        if type == 0:
-            print "cuantos debo esperar" + str((frame['rf_data']))
-            data_available = (frame['rf_data'])
-        """
+
         if type == 1:
             print("tenemos que guardar")
             print frame['rf_data'].split("?")[0]
@@ -192,13 +163,11 @@ def handledata(frame, nframe, type, source_endp):
             print ("Estado de la carga:")
             print frame['rf_data'].split("?")[0].split("$")[2].split(";")[5]
             params['bat_status'] = frame['rf_data'].split("?")[0].split("$")[2].split(";")[5]
-            # params['Hum2']=frame['rf_data'].split("?")[0].split("$")[1]
-            # params['Temp1']=frame['rf_data'].split("?")[0].split("$")[1]
+
 
             print params
             saveinDB(params)
             print "Ye he guardado los datos"
-            # xbee.send("tx",id="\x10",frame_id="\x01",dest_addr_long=address.decode("hex"),dest_addr="\xFF\xFE",broadcast_radius="\x00",options="\x00",data="x30")
 
         else:
             if output == 1:
@@ -249,7 +218,6 @@ def rqlendata(dest_addr, source_endp, xbee):
                     elif int(data_available) == 1998:
                         print "data no del api"
                     else:
-                        # print "numero de lineas disponibles"+data_available
                         print "numero de ficheros disponibles " + data_available
                         discovered = True
                         break
@@ -258,10 +226,7 @@ def rqlendata(dest_addr, source_endp, xbee):
                     discovered = False
             else:
                 print "frame no handle 2"
-                discovered = False
-                # xbee.send("tx",id="\x10",frame_id="\x01",dest_addr_long=dest_addr.decode("hex"),dest_addr="\xFF\xFE",broadcast_radius="\x00",options="\x00",data="\x10")
-                # print frame
-                # return
+
         except:
             print "error al recibir frame"
             discovered = False
@@ -272,9 +237,6 @@ def rqlendata(dest_addr, source_endp, xbee):
 
 def rq_data(dest_addr, source_endp, xbee):
     global data_available
-    # global xbee
-    # print ("mando 0x20")
-    #print (data_available)
     print ("Peticion de ficheros")
     xbee.send("tx", id="\x10", frame_id="\x01", dest_addr_long=dest_addr.decode("hex"), dest_addr="\xFF\xFE",
               broadcast_radius="\x00", options="\x00", data="\x20")
@@ -310,11 +272,10 @@ def rq_data(dest_addr, source_endp, xbee):
                     break
                 else:
                     pass
-                    #print "no es tiempo de recibir numero de lineas"
-                    #print frame
+
             else:
                 print "no tx frame:"
-                #print frame
+
         except:
             print "error al recibir fichero"
             break
@@ -330,18 +291,15 @@ def end_tx(dest_addr, source_endp, xbee):
             frame = xbee.wait_read_frame(timeout = 2)
             if frame['id'] == 'rx':
                 if frame['rf_data'].split("$")[1] == "ack_endtx":
-                    #print frame
                     print "termino la transmision"
                     break
                 else:
                     print"trama no correcta"
-                    #print frame
             else:
                 print "trama no Rx:"
         except:
             print "error confirmacion"
             break
-            #print frame
     xbee.halt()
 
 def serveforever(xbee):
@@ -363,16 +321,13 @@ def serveforever(xbee):
                         print frame
                         data_available = frame['rf_data'].split("$")[2].split('?')[0]
                         if int(data_available) == 999:
-                            # print frame
                             print "trama  corrupta"
                             print frame
                         elif int(data_available) == 1998:
-                            # print frame
                             print "data no del api"
                             print frame
                         else:
                             print "numero de lineas disponibles" + data_available
-                            # print frame
                             break
                     elif frame['rf_data'].split("$")[1] == "endp_1":
                         print "no es momento de guadar datos"
@@ -395,12 +350,9 @@ def serveforever(xbee):
                         print "trama con datos"
                         print frame
                         handledata(frame, data_available, 1, "endp_1")
-                        # saveinDB(params)
-                        # handledata(frame,data_available,1,frame['source_addr_long'])
                         print "pedidas" + str(i)
                         print "available" + str(data_available)
                         if i >= int(data_available):
-                            # xbee.halt()
                             print "ya no hay mas datos disponibles del endp_1"
                             break
                     else:
@@ -425,20 +377,13 @@ def serveforever(xbee):
                       dest_addr="\xFF\xFE", broadcast_radius="\x00", options="\x00", data="\x70")
         elif op == 5:
             print str(int(time.time()))
-            #request_done = False
             completo = False
             while 1:
                 t = datetime.datetime.now()
-                #getrequesttime()
-                #time.sleep(2)
                 while True:
-                    # if not (t.second>=10 and t.second<30):
                     t = datetime.datetime.now()
                     if (t.minute != 00 ):
-                        #request_done = False
                         completo = False
-                        #t = datetime.datetime.now()
-                        #print (time.time())
                         print str(t.hour) + ":" + str(t.minute) + ":" + str(t.second)
                         time.sleep(5)
 
@@ -451,23 +396,17 @@ def serveforever(xbee):
                     if ((t.minute == 00) and (t.hour == 12) and (completo == False)):
                         print ("secuencia de pedida de datos")
                         destinators = getendpoints()
-                        # print destinators
                         time.sleep (90)#esperamos 1:30 minutos y asi nos aseguramos que los nodos se han despertado
                         for destinator in destinators:
                             print "destino de request" + destinator[0]
-                            # print destinator
                             address = destinator[1].split(':')[0]
                             address += destinator[1].split(':')[1]
-                            # serial_port = serial.Serial('/dev/ttyUSB0', 9600)
-                            # xbee = ZigBee(serial_port, escaped=True)
                             discovered = False
                             discovered = rqlendata(address, destinator[0], xbee)
                             time.sleep(0.5)
                             if discovered:
-                                # xbee = ZigBee(serial_port, escaped=True)
                                 rq_data(address, destinator[0], xbee)
                                 end_tx(address, destinator[0], xbee)
-                                #request_done = False
                                 completo = True
                                 print "esperamos a un nuevo ciclo"
                             else:
@@ -475,7 +414,6 @@ def serveforever(xbee):
                                 t = datetime.datetime.now()
                                 print str(t.hour) + ":" + str(t.minute) + ":" + str(t.second)
                                 time.sleep(0.5)
-                                #request_done = False
                                 completo = True
                             print "he terminado todos los datos"
                         print "he salido del bucle for"
@@ -519,12 +457,10 @@ def serveforever(xbee):
         elif op == 9:
             destinators = getendpoints()
             i=0
+
             for destinator in destinators:
                 print  "Para elegir el nodo " + destinator[0] + ": introduzca un " + str (i) #+ destinator[1]
                 i= i+1
-            #address = destinator[1].split(':')[0]
-            #address += destinator[1].split(':')[1]
-            #print (address)
 
             while True:
                 op_nodo = int(input("introduzca opcion seleccionada: "))
@@ -532,11 +468,9 @@ def serveforever(xbee):
                     print ("Nodo elegido: ") + destinators[op_nodo][0]
                     address = destinators[op_nodo][1].split(':')[0]
                     address += destinators[op_nodo][1].split(':')[1]
-                    #print address
                     break
                 else:
                     print ("nodo no valido ")
-                    #print ("Seleccione un nodo valido")
 
             print ("mando 0x60")
             op_file = int(input("introduzca numero de fichero a buscar: "))
@@ -565,11 +499,8 @@ def serveforever(xbee):
                             else:
                                 print ("no se recibieron todos los datos")
                         except:
-                            #print cont
-                            #print frame['rf_data'][0]
 			    pass
                     else:
-                        #print "trama corrupta"
 			pass
                 except:
                     print "El fichero que busca no existe o se produjo un error al recibir frame"
@@ -596,7 +527,6 @@ def serveforever(xbee):
 def RSSI_Coordinador(xbee):
     print 'pido dato RSSI de nodo coordinador'
     xbee.halt()
-    # xbee.send("remote_at", id="\x17", frame_id="\x01", dest_addr_long="\x00\x13\xA2\x00\x40\xB1\x35\x5D", dest_addr="\xFF\xFE", options="\x00", command="\x46\x4E")
     xbee.send("at", frame_id="\x01", command="\x46\x4E")
     while True:
         try:
@@ -619,7 +549,6 @@ def RSSI_Coordinador(xbee):
                     fecha = str(t.day) + "/" + str(t.month) + "/" + str(t.year)
                     print fecha
                     insert_RSSI(str(fecha), nodo_emisor, nodo_receptor, datodb)
-                    # consulta(longi, datodb, nodo_emisor, nodo_receptor)
                 except:
                     break
             else:
@@ -628,90 +557,14 @@ def RSSI_Coordinador(xbee):
             print 'termino'
             break
     print 'paso al siguiente'
-    # RSSI_resto_nodos(xbee)
-
-    """
-    print ("pido dato RSSI de nodo 10")
-    xbee.halt()
-    xbee.send("remote_at", id="\x17", frame_id="\x01", dest_addr_long="\x00\x13\xA2\x00\x40\xB1\x34\xDF",
-      dest_addr="\xFF\xFE", options="\x00", command="\x46\x4E")
-    while True:
-        try:
-            frame = xbee.wait_read_frame(timeout = 15)
-            if frame['id'] == 'remote_at_response' and frame['status'] == '\x00':
-                print str(frame)
-                try:
-                    datosframe = frame['parameter']
-                    datonodo = datosframe[10:17]
-                    print datonodo
-                    longi = len(datosframe)
-                    datodb = datosframe[longi - 1]
-                    print 'signal db: '
-                    print ord(datodb)
-                    nodo_emisor = str('nodo_10')
-                    print nodo_emisor
-                    nodo_receptor = str(datonodo)
-                    print nodo_receptor
-                    t = datetime.datetime.now()
-                    fecha = str(t.day) + "/" + str(t.month) + "/" + str(t.year)
-                    print fecha
-                    consulta(str(fecha), nodo_emisor, nodo_receptor, datodb)
-                except:
-                    break
-            else:
-                print 'no hay frame'
-        except:
-            print 'termino'
-            break
-    print 'paso al siguiente'
-    print ("pido dato RSSI de nodo 2")
-    xbee.halt()
-    xbee.send("remote_at", id="\x17", frame_id="\x01", dest_addr_long="\x00\x13\xA2\x00\x40\xAD\x63\xA7",
-              dest_addr="\xFF\xFE", options="\x00", command="\x46\x4E")
-    #xbee.send("remote_at", id="\x17", frame_id="\x01", dest_addr_long="\x00\x13\xA2\x00\x40\xB1\x35\x5D", dest_addr="\xFF\xFE", options="\x00", command="\x46\x4E")
-    while True:
-        try:
-            frame = xbee.wait_read_frame(timeout = 15)
-            if frame['id'] == 'remote_at_response' and frame['status'] == '\x00':
-                print str(frame)
-                try:
-                    datosframe = frame['parameter']
-                    datonodo = datosframe[10:17]
-                    print datonodo
-                    longi = len(datosframe)
-                    datodb = datosframe[longi - 1]
-                    print 'signal db: '
-                    print ord(datodb)
-                    nodo_emisor = str('nodo_2')
-                    print nodo_emisor
-                    nodo_receptor = str(datonodo)
-                    print nodo_receptor
-                    t = datetime.datetime.now()
-                    fecha = str(t.day) + "/" + str(t.month) + "/" + str(t.year)
-                    print fecha
-                    consulta(str(fecha), nodo_emisor, nodo_receptor, datodb)
-                except:
-                    break
-            else:
-                print 'no hay frame'
-        except:
-            print 'termino'
-            break
-    print 'paso al siguiente ciclo'
-    """
     time.sleep(5)
-    # RSSI_GLOBAL(xbee)
-
 
 def consulta_nodos(xbee):
     try:
         con = mdb.connect('localhost', 'root', 'root', 'ardusense')
         with con:
             cur = con.cursor()
-            # update ardusense.endpoints set endp_address='0013A200:408BC81E' where endp_id='endp_1'
-            # print("SELECT endp_id,endp_address FROM ardusense.endpoints;")
             print "Recuperando datos de nodos de la red"
-            # cur.execute("SELECT nodo,endp_address FROM ardusense.endpoints where nodo='nodo_10' or nodo='nodo_02' order by id asc;")
             cur.execute(
                 "SELECT nodo,endp_address FROM ardusense.endpoints;")
             end_params = cur.fetchall()
@@ -722,8 +575,6 @@ def consulta_nodos(xbee):
         return end_params
         serial_port.close()
         sys.exit(0)
-    # time.sleep(10)  # esperamos 1:30 minutos y asi nos aseguramos que los nodos se han despertado
-
 
 def RSSI_resto_nodos(xbee):
     destinators = consulta_nodos(xbee)
@@ -731,8 +582,6 @@ def RSSI_resto_nodos(xbee):
         address = destinator[1].split(':')[0]
         address += destinator[1].split(':')[1]
         time.sleep(0.5)
-        # address="0013A20040B134DF"
-        # address = "0013A20040AD63A7"
         xbee.halt()
         xbee.send("remote_at", id="\x17", frame_id="\x01", dest_addr_long=address.decode('hex'),
                   dest_addr="\xFF\xFE", options="\x00", command="\x46\x4E")
@@ -768,22 +617,6 @@ def RSSI_resto_nodos(xbee):
                 print 'termino'
                 break
         print 'paso al siguiente'
-        """
-        if discovered:
-            # xbee = ZigBee(serial_port, escaped=True)
-            rq_data(address, destinator[0], xbee)
-            end_tx(address, destinator[0], xbee)
-            # request_done = False
-            completo = True
-            print "esperamos a un nuevo ciclo"
-        else:
-            print "datos ya pedidos esperamo al siguiente ciclo"
-            t = datetime.datetime.now()
-            print str(t.hour) + ":" + str(t.minute) + ":" + str(t.second)
-            time.sleep(0.5)
-            # request_done = False
-            completo = True
-        """
         print "he terminado todos los datos"
     print "he salido del bucle for"
 
@@ -793,20 +626,10 @@ def insert_RSSI(var1, var2, var3, var4):
         con = mdb.connect('localhost', 'root', 'root', 'ardusense')
         with con:
             cur = con.cursor()
-            # update ardusense.endpoints set endp_address='0013A200:408BC81E' where endp_id='endp_1'
-            # print("SELECT endp_id,endp_address FROM ardusense.endpoints;")
             print "guardando datos"
-            # cursor.execute("INSERT INTO ardusense.antenas (fecha, emisor, receptor, intensidad) VALUES (?, ?, ?, ?);",'cassete' ,'moto' ,'rosa', 'malva')
-            # cur.execute("INSERT INTO `ardusense`.`antenas` (`fecha`, `emisor`, `receptor`, `intensidad`) VALUES (?, ?, ?, ?);"),'LIBRO', 'CASCO', 'naranja', 'morado')
             cur.execute("INSERT INTO `ardusense`.`antenas` (`fecha`, `emisor`, `receptor`, `intensidad`) "
                         "VALUES ( '" + str(var1) + "', '" + str(var2) + "', '" + str(var3) + "', '" + str(
                 ord(var4)) + "' );")
-            # cur.execute("INSERT INTO `ardusense`.`antenas` (`fecha`, `emisor`, `receptor`, `intensidad`) VALUES ('LIBRO', 'CASCO', 'naranja', 'morado');")
-            # cur.execute("SELECT * FROM ardusense.antenas order by id asc;")
-            # cur.execute("SELECT endp_id,endp_address FROM ardusense.endpoints order by id asc;")
-            # endp_params = cur.fetchall()
-            # print endp_params
-            # return endp_params
             print "datos guardados"
     except con.Error as err:
         if (output == 1):
@@ -839,13 +662,7 @@ def main():
         # serial_port.inWaiting()
         xbee = ZigBee(serial_port, escaped=True)
         data_available = 0
-
-        # con = mdb.connect('localhost', 'drl', 'hrl2015', 'ardusense')#######Connect to Data Base MySQL#######Connect to Data Base MySQL
-
         timeout = True
-
-        # t = datetime.datetime.now()
-        # print t.minute
         output = 0
         if len(sys.argv) != 2:
             print "Error Usage:  SAN_Manager_v8.py 0/1"
@@ -857,9 +674,6 @@ def main():
 
 
     except KeyboardInterrupt:
-        # sock_in.close()
-        # t1.exit()
-        # t2.exit()
         print 'Closing server'
         print("Ctrl+c pressed, exit")
         xbee.halt()
